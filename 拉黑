@@ -1,5 +1,5 @@
 // 使用浏览器打开 https://weibo.com 并登陆
-// 打开命令行：Windows Chrome F12 ； Mac Chrome Option+Command+I
+// windows: chorme firefox ie浏览器按F12
 // 粘贴以下代码放入console并回车
 // 每隔2秒拉黑一个
 
