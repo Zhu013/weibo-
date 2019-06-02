@@ -1,0 +1,58 @@
+// 使用浏览器打开 https://weibo.com 并登陆
+// 打开命令行：Windows Chrome F12 ； Mac Chrome Option+Command+I
+// 粘贴以下代码放入console并回车
+// 每隔2秒拉黑一个
+
+
+// 代码参考https://github.com/yu961549745/WeiboBlackList
+
+
+//将需要拉黑的人加入名单
+//数字为用户主页链接/u/后面的十位数字
+//例如
+//---------- 开始复制粘贴 -----------
+
+var list = [
+1650548275, //小偶像的黑粉
+7067251952, //卖粉广告
+7072382669 //僵尸微博
+]
+
+console.log('你拉黑了' + list.length + '个账号');
+
+var http = new XMLHttpRequest()
+var i = 0
+var timer = null
+
+function black() {
+    if (i >= list.length) {
+        return clearInterval(timer)
+    }
+    var listId = list[i]
+    var url = 'https://weibo.com/aj/filter/block?ajwvr=6'
+
+    http.open('POST', url, true)
+    http.setRequestHeader('Content-type', 'application/x-www-form-urlencoded')
+    http.send('uid=' + listId + '&filter_type=1&status=1&interact=1&follow=1')
+    http.onreadystatechange = function() {
+        if (http.readyState != 4 || http.status != 200) {
+            return;
+        }
+
+        var data = {
+            msg: '解析失败'
+        }
+        try {
+            data = JSON.parse(http.responseText)
+        } catch (err) {}
+
+        if (data.code == 100000) {
+            console.log(i + '[' + listId + '] => 成功:' + data.msg + ' - ' + http.status + ' - ' + http.responseText)
+        } else {
+            console.error(i + '[' + listId + '] => 失败:' + data.msg + ' - ' + http.status + ' - ' + http.responseText)
+        }
+    }
+    i++
+}
+
+timer = setInterval(black, 2000)
